@@ -10,7 +10,7 @@ O projeto consiste em aplicação backend com Node.js, Banco de dados com MongoD
 
 as TECNOLOGIAS usadas foram:
 
-## -> Backend
+## Backend
 * bcrypt 
 * cookie-parser 
 * cors 
@@ -20,7 +20,7 @@ as TECNOLOGIAS usadas foram:
 * multer 
 * nodemon
 
-->Frontend
+## Frontend
 * **React.js**
 * React Router V6
 * yarn(vite)
@@ -29,11 +29,11 @@ as TECNOLOGIAS usadas foram:
 --------------------------------------------------------------
 Lista de tarefas:
 ## Backend
-- [ ] Criar conexão com banco de dados
-- [ ] Criar Arquitetura MVC
-- [ ] Inicializar app com index.js
-- [ ] Criar Rotas e Controles
-- [ ] Fazer validações de usuário
+- [x] Criar conexão com banco de dados
+- [x] Criar Arquitetura MVC
+- [x] Inicializar app com index.js
+- [x] Criar Rotas e Controles
+- [x] Fazer validações de usuário
 - [ ] Criar sistema de autenticação por tokens
 - [ ] Criar sistema de uploads de imagens
 - [ ] Criar regras de negócio do Apartamento
