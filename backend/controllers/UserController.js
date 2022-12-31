@@ -1,11 +1,15 @@
 //IMPORTS
 const User = require('../models/User')
 
+//VARIÁVEIS DE AMBIENTE
+require('dotenv').config()
+
 const bcrypt = require('bcrypt') // criptografa a senha e gera um token 
 const jwt = require('jsonwebtoken')
-const createUserToken = require('../helpers/create-user-token')
 
 //HELPERS
+const createUserToken = require('../helpers/create-user-token')
+const getToken = require('../helpers/get-token')
 
 module.exports = class UserController {
 
@@ -69,9 +73,59 @@ module.exports = class UserController {
 			res.status(500).json({ message: error })
 		}
 	}
+
 	static async login(req, res) {
-		res.status(200).json({
-			message: "Função login"
-		})
+		const { email, password } = req.body
+		if (!email) {
+			res.status(422).json({ message: "O email é obrigatório" })
+			return
+		}
+		if (!password) {
+			res.status(422).json({ message: "A senha é obrigatória" })
+			return
+		}
+
+		//VERIFICANDO SE O USUÁRIO JÁ EXISTE
+		const user = await User.findOne({ email: email })
+
+		if (!user) {
+			res.status(422).json({
+				message: "Não há usuário cadastrado com esse e-mail!"
+			})
+			return
+		}
+
+		// VERIFICAR SE A SENHA CORRESPONDE A SENHA DO BANCO DE DADOS
+		const checkPassword = await bcrypt.compare(password, user.password)
+
+		if (!checkPassword) {
+			res.status(422).json({
+				message: "Senha incorreta!!!"
+			})
+			return
+		}
+
+		await createUserToken(user, req, res)
+	}
+
+	static async checkUser(req, res) {
+		let currentUser;
+
+		// console.log(req.headers.authorization)
+
+		if (req.headers.authorization) {
+
+			const token = getToken(req)
+			const decoded = jwt.verify(token, "porEnquanto")
+			//process.env.SEGREDO_CHAVE
+
+			currentUser = await User.findById(decoded.id)
+
+			currentUser.password = undefined
+		} else {
+			currentUser = null
+		}
+
+		res.status(200).send(currentUser)
 	}
 }
