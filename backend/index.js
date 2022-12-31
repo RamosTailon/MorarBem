@@ -13,6 +13,8 @@ app.use(cors({ credentials: true, origin: 'http://localhost:3000' })) //3000 PAR
 app.use(express.static('public'))
 
 //Routes
+const UserRoutes = require('./routes/UserRoutes')
+app.use('/users', UserRoutes)
 
 //LISTEN
 app.listen(5000)
