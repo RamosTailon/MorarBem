@@ -1,4 +1,10 @@
 /backend/node_modules
 /backend/public
 
+/node_modules
+.env
+
+package-lock.json
+package.json
+
 .vscode

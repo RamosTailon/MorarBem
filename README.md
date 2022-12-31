@@ -34,7 +34,8 @@ Lista de tarefas:
 - [x] Inicializar app com index.js
 - [x] Criar Rotas e Controles
 - [x] Fazer validações de usuário
-- [ ] Criar sistema de autenticação por tokens
+- [x] Criar sistema de autenticação por tokens
+- [ ] Criar Login e verificação por token
 - [ ] Criar sistema de uploads de imagens
 - [ ] Criar regras de negócio do Apartamento
 
