@@ -4,6 +4,7 @@ const User = require('../models/User')
 //VARIÁVEIS DE AMBIENTE
 require('dotenv').config()
 
+//CRIPTOGRAFIA E TOKEN
 const bcrypt = require('bcrypt') // criptografa a senha e gera um token 
 const jwt = require('jsonwebtoken')
 
@@ -127,5 +128,29 @@ module.exports = class UserController {
 		}
 
 		res.status(200).send(currentUser)
+	}
+
+	static async getUserById(req, res) {
+
+		const id = req.params.id
+
+		//.select() ELIMINA ALGUNS CAMPOS NA HORA DO QUERY
+		const user = await User.findById(id).select("-password")
+
+		if (!user) {
+			res.status(422).json({
+				message: "Usuário não encontrado!"
+			})
+			return
+		}
+
+		res.status(200).json({ user })
+
+	}
+
+	static async editUser(req, res) {
+		res.status(200).json({
+			message: "Função de editar funcionando!"
+		})
 	}
 }
