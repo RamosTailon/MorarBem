@@ -36,7 +36,7 @@ Lista de tarefas:
 - [x] Fazer validações de usuário
 - [x] Criar sistema de autenticação por tokens
 - [x] Criar Login e verificação por token
-- [ ] Criar sistema de uploads de imagens
+- [x] Criar sistema de uploads de imagens
 - [ ] Criar regras de negócio do Apartamento
 
 ## Frontend
