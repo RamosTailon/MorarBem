@@ -11,6 +11,7 @@ const jwt = require('jsonwebtoken')
 //HELPERS
 const createUserToken = require('../helpers/create-user-token')
 const getToken = require('../helpers/get-token')
+const getUserByToken = require('../helpers/get-user-by-token')
 
 module.exports = class UserController {
 
@@ -149,8 +150,74 @@ module.exports = class UserController {
 	}
 
 	static async editUser(req, res) {
-		res.status(200).json({
-			message: "Função de editar funcionando!"
-		})
+
+		const id = req.params.id
+
+		//VERIFICAR SE O USUÁRIO EXISTE
+		const token = getToken(req)
+		const user = await getUserByToken(token)
+
+		const { name, email, phone, password, confirmpassword } = req.body
+
+		let image = ''
+
+		//VALIDAÇÕES
+		if (!name) {
+			res.status(422).json({ message: "O nome é obrigatório!" })
+			return
+		}
+
+		user.name = name
+
+		if (!email) {
+			res.status(422).json({ message: "O e-mail é obrigatório!" })
+			return
+		}
+
+		//VERIFICANDO SE O USUÁRIO EXISTE
+		const userExists = await User.findOne({ email: email })
+
+		if (user.email !== email && userExists) {
+			res.status(422).json({ message: "Email já cadastrado, por favor use outro!" })
+			return
+		}
+
+		user.email = email
+
+		if (!phone) {
+			res.status(422).json({ message: "O telefone é obrigatório!" })
+			return
+		}
+
+		user.phone = phone
+
+		if (password != confirmpassword) {
+			res.status(422).json({ message: "As senhas não conferem" })
+			return
+		} else if (password === confirmpassword && password != null) {
+			//CREATE A PASSWORD
+			const salt = await bcrypt.genSalt(12)
+
+			const passwordHash = await bcrypt.hash(password, salt) //super senha
+
+			user.password = passwordHash
+		}
+		try {
+
+			//RETORNA OS DADOS ATUALIZADOS DO USUÁRIO
+			await User.findOneAndUpdate( //NÃO É NECESSÁRIO GUARDAR EM UMA VARIÁVEL
+				{ _id: user._id }, //filtro, no caso por id
+				{ $set: user }, //o dado que será atualizado
+				{ new: true } //atualização do dado com sucesso
+			)
+
+			res.status(200).json({ message: "Usuário atualizado com sucesso!" })
+
+
+		} catch (err) {
+			res.status(500).json({ message: err })
+			return
+		}
+
 	}
 }
